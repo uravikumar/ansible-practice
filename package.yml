@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: yes
+  
+  tasks:
+    - name: "Install a package"
+      yum:
+        name: vim
+        state: latest

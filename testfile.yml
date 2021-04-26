@@ -1,0 +1,9 @@
+---
+- hosts: 192.168.43.8
+  
+  tasks:
+    - name: "Create a testfile"
+      file:
+        name: /tmp/playbook_file
+        state: touch
+        owner: ansible-ravi
