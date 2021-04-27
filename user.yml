@@ -1,0 +1,29 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+
+
+  tasks:
+    - name: "Create default user"
+      user:
+        name: ansible-ravi
+        uid: 225334 
+        create_home: true
+        password: $1$SomeSalt$LRZdP3TwZZZ/q8adbdC0g0
+    
+    - name: "Create ssh folder"
+      file:
+        path: /home/ansible-ravi/.ssh
+        state: directory
+
+    - name: "Create empty file"
+      file:
+        path: /home/ansible-ravi/.ssh/authorized_keys
+        state: touch
+      changed_when: false
+
+    - name: "Copy public key"
+      lineinfile:
+        path: /home/ansible-ravi/.ssh/authorized_keys
+        line: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC4pXJRduD6m7t/TfCaTsR/00bsoCoNwizuuzK2l7YJmSTpvfTSWxqb2b/dPLM6O+U4CBtmToBNZguiJNhRd+OMO34V/XsikqYSoSIYDCJphAHKIxqj0qAgILVsGSo/yE5BSUteEMP5NinXZeIuC5ZvmrTHzLLdL0lcw29D+XwPc0p01Ht5A6YNbhQmf0SE++BELJlvSVoaXN67iEZ7Uxm2wiDjJgvt+AkYktIXMjjvzaYHFYijOZQVaHiGj1+0qvP2SVJMBT2j6BspqsZOH/wJbAtJbUz/Ugon/EJu0O1vZRsOoOgdLvInWzG31MCLOJU4gLdOtYt4vefoG9rp9JOL ansible-ravi@example2.example.com"

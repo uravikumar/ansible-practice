@@ -1,0 +1,16 @@
+---
+- hosts: all
+
+  vars:
+    pub_key: "{{lookup('file', '/home/ansible-ravi/ansible-practice/textfile')}}"
+
+  tasks:
+    - name: "File lookup demo"
+      file:
+        name: /tmp/auth_key
+        state: touch
+    
+    - name: "Copy SSH key"
+      lineinfile:
+        path: "/tmp/auth_key"
+        line: "{{ pub_key }}"

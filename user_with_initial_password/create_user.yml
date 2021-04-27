@@ -1,0 +1,13 @@
+---
+- hosts: centos5
+  become: yes
+
+  vars_files: password.yml    
+  
+  tasks:
+    - name: "Create ravikumar user"
+      user:
+        name: ravikumar
+        uid: 10000
+        create_home: yes
+        password: "{{ user_password | password_hash('sha512') }}"

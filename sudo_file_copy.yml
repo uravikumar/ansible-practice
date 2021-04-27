@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: "Copy sudo file"
+      copy:
+        src: /etc/sudoers.d/ansible-ravi
+        dest: /etc/sudoers.d/ansible-ravi
+        owner: root
+        group: root
+        remote_src: no

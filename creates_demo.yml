@@ -1,0 +1,8 @@
+---
+- hosts: all
+  
+  tasks:
+    - name: "Creates demo"
+      command: touch /tmp/abcd
+      args:
+        creates: /tmp/abcd

@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  
+  tasks:
+    - name: "Copy /etc/hosts file"
+      copy:
+        src: /etc/hosts
+        dest: /etc/

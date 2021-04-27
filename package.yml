@@ -1,9 +1,28 @@
 ---
 - hosts: all
   become: yes
+
+  vars:
+    packages:
+      - vim
+      - ntpdate
+      - ntp
+      - epel-release
+      - cowsay
+      - htop
+      - redhat-lsb-core
+      - tree
   
   tasks:
-    - name: "Install a package"
+    - name: "Install base packages on CentOS"
       yum:
-        name: vim
+        name: "{{ packages }}"
         state: latest
+      when: ansible_distribution == "CentOS"
+  
+    - name: "Install base packages on Ubuntu"
+      apt:
+        name: "{{ packages }}"
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+

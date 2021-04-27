@@ -1,0 +1,21 @@
+---
+- hosts: all
+  
+  tasks:
+    - name: "Check file availability"
+      stat:
+        path: /tmp/abcd
+      register: st_output
+
+    - name: "Display file status"
+      debug:
+        msg: "The file /tmp/abcd is present"
+      when: st_output.stat.exists
+    
+    - name: "Create the file if it's not present"
+      file:
+        name: /tmp/abcd
+        state: touch
+      when: not st_output.stat.exists
+
+   

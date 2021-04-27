@@ -1,0 +1,14 @@
+---
+- hosts: all
+
+  tasks:
+    - name: "Check if /tmp/abc123 is present"
+      stat:
+        path: /tmp/abc123
+      register: st
+
+    - name: "Create file"
+      file:
+        name: /tmp/abc123
+        state: touch
+      when: not st.stat.exists
