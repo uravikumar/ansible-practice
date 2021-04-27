@@ -10,7 +10,7 @@
         name: ansible-ravi
         uid: 225334 
         create_home: true
-        password: $1$SomeSalt$LRZdP3TwZZZ/q8adbdC0g0
+        password: $1$SomeSalt$LRZdP3TwZZZ/q8adbdC0g0  #password is centos
 
     - name: "Copy authorized key"
       authorized_key:
