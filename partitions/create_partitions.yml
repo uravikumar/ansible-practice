@@ -1,0 +1,41 @@
+---
+- hosts: centos5
+  become: True
+  
+  vars:
+    partitions:
+      - { partition: /dev/sdb1, mountpoint: /data1 }
+      - { partition: /dev/sdb2, mountpoint: /data2 }
+
+  tasks:
+    - name: "Create 1st partition of 512MiB"
+      parted:
+        device: /dev/sdb
+        number: 1
+        part_start: 2MiB
+        part_end: 512MiB
+        part_type: primary
+        state: present
+
+    - name: "Create 2nd partition"
+      parted:
+        device: /dev/sdb
+        number: 2
+        part_start: 513MiB
+        part_end: 1GiB
+        part_type: primary
+        state: present
+
+    - name: "Format partitions"
+      filesystem:
+        device: "{{ item.partition }}"
+        fstype: xfs
+      with_items: "{{ partitions }}"
+
+    - name: "Mount file systems"
+      mount:
+        src: "{{ item.partition }}"
+        path: "{{ item.mountpoint }}"
+        fstype: xfs
+        state: mounted
+      with_items: "{{ partitions }}"

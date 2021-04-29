@@ -1,0 +1,14 @@
+---
+- hosts: centos5
+  become: True
+
+  tasks:
+    - name: "Read device information of /dev/sdb"
+      parted:
+        device: /dev/sdb
+        unit: MiB
+      register: device_info
+
+    - name: "Print Device info" 
+      debug:
+        var=device_info
