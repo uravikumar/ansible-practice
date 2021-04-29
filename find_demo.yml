@@ -1,0 +1,27 @@
+---
+- hosts: centos5
+  
+  vars:
+    white_listed_files:
+      - a.txt
+      - b.txt
+      - c.txt
+       
+  tasks:
+    - name: "Find unwanted files other than whitelisted ones"
+      find:
+        path: "/tmp/files"
+        patterns: "*.txt"
+        recurse: no
+        excludes: "{{ white_listed_files }}"
+      register: unwanted_files
+
+    - name: "Remove unwanted files except whitelisted ones"
+      file:
+        path: "{{ item.path }}"
+        state: absent
+      with_items: "{{ unwanted_files.files }}"
+      
+      #display only file path instead of entire dictionary
+      loop_control:
+        label: "{{ item.path }}"
