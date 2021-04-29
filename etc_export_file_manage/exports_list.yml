@@ -1,0 +1,13 @@
+---
+  nfs_share_exports:
+    /install:
+       export_options:
+         - svlitcla(rw,sync)
+         - svlitcrg(ro,sync)
+         - svlipcla(rw,sync,no_roow_squash)
+    /tmp:
+       export_options:
+         - svlitcoo(rw,sync,root_squash)
+         - svlitcor(ro,sync,no_root_squash)
+         - svlipcrg(rw,sync)
+

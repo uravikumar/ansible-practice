@@ -1,0 +1,21 @@
+---
+- hosts: centos5
+  become: yes
+
+  vars:
+    groups:
+      - name: iidr
+          gid: 1000
+      - name: dsadm
+          gid: 2000
+  tasks:
+    - name: "Create groups"
+      group: 
+        name: "{{ item }}"
+        gid: "{{ item.gid }}"
+        state: present
+      with_dict: "{{ groups }}"
+          
+#      loop:
+#       - { name: "iidr", gid: "1000" }
+#       - { name: "dsadm", gid: "2000" }

@@ -3,22 +3,22 @@
   
   vars:
     white_listed_files:
-      - a.txt
-      - b.txt
-      - c.txt
+      - a
+      - b
+      - c
        
   tasks:
     - name: "Find unwanted files other than whitelisted ones"
       find:
         path: "/tmp/files"
-        patterns: "*.txt"
+        patterns: "*"
         recurse: no
         excludes: "{{ white_listed_files }}"
       register: unwanted_files
 
     - name: "Remove unwanted files except whitelisted ones"
       file:
-        path: "{{ item.path }}"
+        name: "{{ item.path }}"
         state: absent
       with_items: "{{ unwanted_files.files }}"
       

@@ -1,8 +1,16 @@
 ---
 - hosts: all
   become: yes
+  gather_facts: False
 
   tasks:
+    - name: "Collect only required facts to improve performance"
+      setup:
+        gather_subset:
+          - "!all"
+          - "!min"
+          - ansible_distribution
+
     - name: "Reboot Ubuntu systems in our environment"
       reboot:
         msg: "System is being rebooted by Ansible"

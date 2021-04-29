@@ -1,0 +1,13 @@
+---
+- hosts: centos2
+  
+  vars_files: exports_list.yml
+    
+  tasks:
+    - name: "Add export entries"
+      lineinfile:
+        path: /tmp/exports
+        regexp: "{{ item.key }}"
+        line: "{{ item.key}}    {{ item.value.export_options | join(' ') }}"
+        state: present
+      with_dict: "{{ nfs_share_exports }}"
