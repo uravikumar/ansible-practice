@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: "Reboot Ubuntu systems in our environment"
+      reboot:
+        msg: "System is being rebooted by Ansible"
+        reboot_timeout: 600
+      when: ansible_distribution == "Ubuntu"
