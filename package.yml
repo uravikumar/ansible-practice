@@ -12,6 +12,7 @@
       - htop
       - redhat-lsb-core
       - tree
+      - lvm2
   
   tasks:
     - name: "Install base packages on CentOS"
