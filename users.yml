@@ -1,0 +1,31 @@
+---
+- hosts: centos5
+  become: True
+
+  vars:
+    new_users:
+      - name: Ravikumar
+        id: 1000
+        home_dir: /home/ravikumar
+        secondary_groups:
+          - admin
+          - dba
+      - name: bhanu
+        id: 2000
+        home_dir: /home/bhanu
+        secondary_groups:
+          - sysadmins
+          - ahs
+  tasks:
+    - name: "Display new_users:"
+      debug: var=new_users
+    
+    - name: "Create users"
+      user:
+        name: "{{ item.name }}"
+        uid: "{{ item.id }}"
+        groups: "{{ item.secondary_groups }}"
+        create_home: yes
+        home: "{{ item.home_dir }}"
+        state: present
+      with_items: "{{ new_users }}"

@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+
+  vars:
+    firstname:
+      - ravikumar
+      - bhanu
+      - shivam
+    lastname:
+      - udathawar
+      - challa
+      - singh
+
+  tasks:
+    - name: "Print first name and last name using with_together loop"
+      debug:
+        msg: "First name: {{ item.0 }}, Last name: {{ item[1] }}"
+      with_together:
+        - "{{ firstname }}"
+        - "{{ lastname }}"
+     
+    - name: "Print first name and last name using loop construct"
+      debug:
+        msg: " First name: {{ item.0 }}, Last name: {{ item.1 }}"
+      loop: "{{ firstname | zip(lastname) | list }}"

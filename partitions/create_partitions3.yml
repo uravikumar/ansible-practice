@@ -1,0 +1,36 @@
+---
+- hosts: centos5
+  become: True
+
+  tasks:
+    - name: "Create 1st partition of 512MiB partition"
+      parted:
+        device: /dev/sdb
+        number: 1
+        part_start: 2MiB
+        part_end: 512MiB
+        part_type: primary
+        state: present
+      register: part1_info
+    
+    - name: "Create 2nd partition of 1GiB"
+      parted:
+        device: /dev/sdb
+        number: 2
+        part_start: "{{ part1_info.partitions[part1_info.partitions | length -1].end +1 }}KiB"
+        part_end: 1024MiB
+        part_type: primary
+        state: present
+      register: part2_info
+  
+    - name: "Print disk info"
+      debug: var=part2_info
+
+    #- name: "Create 3rd partition of 512MiB"
+    #  parted:
+    #    device: /dev/sdb
+    #    number: 3
+    #    part_start: "{{ part2_info.partitions[part2_info.partitions | length -1].end +1}}KiB"
+    #    part_end: 512MiB
+    #    part_type: primary
+    #    state: present

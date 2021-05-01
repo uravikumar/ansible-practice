@@ -1,0 +1,57 @@
+---
+- hosts: centos5
+  become: True
+
+  vars:
+    logical_volumes:
+      - lvname: data
+        mount_point: /data
+        size: 1G
+        vg: vg01
+        fstype: xfs
+      - lvname: videos
+        mount_point: /videos
+        size: 512M
+        vg: vg01
+        fstype: xfs
+      - lvname: ravi
+        mount_point: /ravi
+        size: 1G
+        vg: vg01
+        fstype: xfs
+
+  tasks:
+    - name: "Create a partition of whole disk on /dev/sdb"
+      parted:
+        device: /dev/sdb
+        number: 1
+        part_type: primary
+        part_start: 2MiB
+        part_end: 100%
+        state: present
+      
+    - name: "Create a volume group with /dev/sdb1"
+      lvg:
+        vg: vg01
+        pvs: /dev/sdb1
+    
+    - name: "Create new Logical Volumes"
+      lvol:
+        lv: "{{ item.lvname }}"
+        size: "{{ item.size }}"
+        vg: "{{ item.vg }}"
+      with_items: "{{ logical_volumes }}"
+
+    - name: "Format newly created logical volumes"
+      filesystem:
+        device: "/dev/mapper/{{ item.vg }}-{{ item.lvname }}"
+        fstype: "{{ item.fstype }}"
+      with_items: "{{ logical_volumes }}"
+
+    - name: "Mount New Logical volumes"
+      mount:
+        path: "{{ item.mount_point }}"
+        src: "/dev/mapper/{{ item.vg }}-{{ item.lvname }}"
+        fstype: "{{ item.fstype }}"
+        state: mounted
+      with_items: "{{ logical_volumes }}"

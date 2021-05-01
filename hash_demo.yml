@@ -3,19 +3,21 @@
   become: yes
 
   vars:
-    groups:
-      - name: iidr
-          gid: 1000
-      - name: dsadm
-          gid: 2000
+    new_files:
+      - name: /tmp/ravikumar
+        owner: ansible-ravi
+        group: ansible-ravi
+        mode: 777
+      - name: /tmp/uravi
+        owner: root
+        group: ansible-ravi
+        mode: 660
+
   tasks:
-    - name: "Create groups"
-      group: 
-        name: "{{ item }}"
-        gid: "{{ item.gid }}"
-        state: present
-      with_dict: "{{ groups }}"
-          
-#      loop:
-#       - { name: "iidr", gid: "1000" }
-#       - { name: "dsadm", gid: "2000" }
+    - name: "Create new files"
+      file:
+        name: "{{ item.name }}"
+        owner: "{{ item.owner }}"
+        mode: "{{ item.mode }}"
+        state: touch
+      with_items: "{{ new_files }}"

@@ -12,3 +12,7 @@
     - name: "Print Device info" 
       debug:
         var=device_info
+
+    - name: "Print last partition end sector"
+      debug:
+        msg: "The ending sector of last partition is : {{ device_info.partitions[device_info.partitions | length -1].end }}"

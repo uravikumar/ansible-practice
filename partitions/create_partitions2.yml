@@ -4,8 +4,11 @@
   
   vars:
     partitions:
-      - { partition: /dev/sdb1, mountpoint: /data1 }
-      - { partition: /dev/sdb2, mountpoint: /data2 }
+      - /dev/sdb1
+      - /dev/sdb2
+    mountpoints:
+      - /data1
+      - /data2
 
 
   tasks:
@@ -29,15 +32,15 @@
 
     - name: "Format partitions"
       filesystem:
-        device: "{{ item.partition }}"
+        device: "{{ item }}"
         fstype: xfs
       with_items: "{{ partitions }}"
 
     - name: "Mount file systems"
       mount:
-        src: "{{ item.partition }}"
-        path: "{{ item.mountpoint }}"
+        src: "{{ item.0 }}"
+        path: "{{ item.1 }}"
         fstype: xfs
         state: mounted
-      with_items: "{{ partitions }}"
+      loop: "{{ partitions | zip(mountpoints) | list }}"
 

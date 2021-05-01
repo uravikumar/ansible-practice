@@ -1,0 +1,32 @@
+---
+- hosts: centos5
+  gather_facts: False
+
+  vars:
+    nfs_export_list:
+      - share: /install
+        clients:
+          - client_name: svlitcla
+            export_options: rw,sync
+          - client_name: svlitcoo
+            export_options: ro,sync
+      - share: /data2
+        clients:
+          - client_name: svlitcoo
+            export_options: rw,no_root_squash
+          - client_name: svlitcrg
+            export_options: rw,no_root_squash
+
+  tasks:
+    - name: "Print var "
+      debug: var=nfs_export_list
+
+    - name: "Add export options"
+      lineinfile:
+        path: /tmp/new_exports
+        regexp: "{{ item.0['share'] }}"
+        line: "{{ item.0.share }} {{ item.1.client_name }},({{ item.1.export_options }})"
+        state: present
+      with_subelements:
+        - "{{ nfs_export_list }}"
+        -  clients
