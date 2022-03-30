@@ -1,0 +1,18 @@
+---
+- hosts: all 
+  become: true
+
+  vars:
+    file_systems:
+      - "/"
+      - "/var"
+      - "/opt"
+      - "/tmp"
+    min_free_space: 1000
+
+  tasks:
+    - name: "Check if file systems have enough free space"
+      fail:
+        msg: "File systems {{ item }} has no enough space"
+      loop: "{{ file_systems }}"
+      when: facter_mountpoints[item]['available_bytes'] | int /1024/1024 < min_free_space
